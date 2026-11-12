@@ -1,0 +1,11 @@
+{
+  "name": "ali-zaraket-portfolio",
+  "private": true,
+  "description": "Portfolio site of Ali Zaraket, AI & full-stack engineer in Beirut, Lebanon",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

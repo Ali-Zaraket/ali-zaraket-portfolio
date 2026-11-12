@@ -1,0 +1,1381 @@
+<title>Playground Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Portfolio of Ali Zaraket, a mobile, web and Web3 engineer in Beirut, Lebanon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a full-bleed toy stage (four switchable scenes) above a quiet two-column portfolio sheet. */
+:root{
+  --bg:#0b0c0f; --surface:#14161b; --raised:#1c1f26; --fg:#ecebe6; --muted:#8d9099; --line:#262931;
+  --accent:#ffc35c; --sun:#ffc35c; --accent-ink:#1d1504; --ok:#4cd68a;
+  --scrim:rgba(11,12,15,.74); --shadow:rgba(0,0,0,.55); --tile:#ecebe6; --tile-ink:#121317;
+  --display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f1f2f4; --surface:#ffffff; --raised:#e6e8ec; --fg:#14151a; --muted:#5a5e68; --line:#d8dbe1;
+    --accent:#9a5c00; --sun:#f0a020; --accent-ink:#ffffff; --ok:#13854a;
+    --scrim:rgba(241,242,244,.8); --shadow:rgba(20,22,30,.22); --tile:#ffffff; --tile-ink:#14151a;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f1f2f4; --surface:#ffffff; --raised:#e6e8ec; --fg:#14151a; --muted:#5a5e68; --line:#d8dbe1;
+  --accent:#9a5c00; --sun:#f0a020; --accent-ink:#ffffff; --ok:#13854a;
+  --scrim:rgba(241,242,244,.8); --shadow:rgba(20,22,30,.22); --tile:#ffffff; --tile-ink:#14151a;
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--fg)}
+body{margin:0;font:15px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+.band{padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:1200px;margin-inline:auto}
+
+.skip{position:absolute;left:12px;top:-60px;z-index:30;padding:8px 12px;border-radius:8px;background:var(--fg);color:var(--bg);text-decoration:none;font-weight:500}
+.skip:focus{top:12px}
+
+/* ---------- header ---------- */
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding-block:14px}
+.brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;min-width:0}
+.brand h1{margin:0;font:700 19px/1.2 var(--display);letter-spacing:-.01em}
+.brand-role{font:12px/1.3 var(--mono);color:var(--muted)}
+
+/* ---------- stage ---------- */
+.stage{position:relative;height:clamp(460px,74vh,780px);height:clamp(460px,74svh,780px);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;border-block:1px solid var(--line);background:var(--bg)}
+/* each toy is its own stacking layer, so dragged cards can never rise above the HUD, popover or results card */
+.scene{position:absolute;inset:0;z-index:0;isolation:isolate}
+.scene > canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene-msg{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;color:var(--muted)}
+
+.stage-bar{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding-block:12px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));pointer-events:none}
+.hint{flex:1 1 200px;min-width:0;margin:0;font:12px/1.45 var(--mono);color:var(--muted)}
+.stage-actions{display:flex;gap:8px;pointer-events:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font:500 13px/1 var(--body);padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;text-decoration:none;white-space:nowrap;transition:border-color .15s,transform .15s}
+.btn:hover{border-color:var(--muted)}
+.btn:active{transform:translateY(1px)}
+.btn .ic{width:15px;height:15px}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-accent:hover{border-color:var(--fg)}
+.btn .best{font:11px/1 var(--mono);opacity:.75}
+.icon-btn{display:grid;place-items:center;width:30px;height:30px;flex:none;padding:0;border:0;border-radius:50%;background:var(--raised);color:var(--fg);cursor:pointer}
+.icon-btn:hover{background:var(--line)}
+.icon-btn .ic{width:15px;height:15px}
+
+.hud{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:7;display:flex;gap:18px;align-items:baseline;padding:9px 18px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font:500 15px/1 var(--mono);font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
+#hud-left{color:var(--muted)}
+#hud-right{display:inline-block;color:var(--accent)}
+.hud.bump #hud-right{animation:bump .35s ease-out}
+@keyframes bump{0%{transform:scale(1.4)}100%{transform:scale(1)}}
+
+.pop{position:absolute;z-index:9;width:min(280px, calc(100% - 24px));padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 22px 44px -18px var(--shadow)}
+.pop-label{margin:0 0 4px;font:11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.pop-value{margin:0 32px 14px 0;font:600 18px/1.3 var(--body);overflow-wrap:anywhere;user-select:text;-webkit-user-select:text}
+.pop-actions{display:flex;flex-wrap:wrap;gap:8px}
+.pop-x{position:absolute;top:10px;right:10px}
+
+.endcard{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:16px;background:var(--scrim);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.endcard-panel{width:min(320px,100%);padding:26px 24px 22px;border:1px solid var(--line);border-radius:18px;background:var(--surface);text-align:center;box-shadow:0 30px 60px -24px var(--shadow)}
+.end-kicker{margin:0;font:11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.end-num{margin:10px 0 2px;font:800 64px/1 var(--display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.end-unit{margin:0;color:var(--muted)}
+.end-best{margin:14px 0 18px;font:500 13px/1.3 var(--mono);color:var(--accent)}
+.end-actions{display:flex;gap:8px;justify-content:center}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));z-index:40;max-width:calc(100% - 32px);transform:translate(-50%,16px);opacity:0;padding:10px 16px;border-radius:12px;background:var(--fg);color:var(--bg);font:500 13px/1.4 var(--body);text-align:center;transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- orbit ---------- */
+.sun{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(80%,760px);text-align:center;pointer-events:none}
+.sun-name{display:block;font:760 clamp(36px,6.6vw,88px)/.95 var(--display);font-variation-settings:"opsz" 96;letter-spacing:-.035em;text-wrap:balance}
+.sun-role{display:block;margin-top:12px;font:13px/1.3 var(--mono);color:var(--muted)}
+.planet{position:absolute;left:0;top:0;width:var(--d,60px);height:var(--d,60px);padding:0;border:0;background:none;cursor:grab;touch-action:none;will-change:transform;-webkit-tap-highlight-color:transparent}
+.planet-body{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;border:1px solid var(--line);background:var(--surface);transition:border-color .2s}
+.planet .ic{width:22px;height:22px}
+.planet:hover .planet-body,.planet.held .planet-body{border-color:var(--sun)}
+.planet.held{cursor:grabbing}
+.planet-label{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);font:11px/1 var(--mono);color:var(--muted);white-space:nowrap}
+.planet.hit .planet-body{animation:hit .5s ease-out}
+@keyframes hit{0%{scale:1.4;background:var(--sun);color:var(--accent-ink);border-color:var(--sun)}100%{scale:1}}
+.planet:focus-visible{outline:none}
+.planet:focus-visible .planet-body{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- magnets ---------- */
+.fridge{position:absolute;inset:0;background:linear-gradient(100deg,var(--bg) 0%,var(--surface) 48%,var(--bg) 100%)}
+.handle{position:absolute;left:14px;top:16%;height:46%;width:7px;border-radius:7px;background:var(--raised);border:1px solid var(--line)}
+.mag{position:absolute;left:0;top:0;padding:6px 10px 7px;border:0;border-radius:2px;background:var(--tile);color:var(--tile-ink);font:500 15px/1.15 var(--body);white-space:nowrap;cursor:grab;touch-action:none;will-change:transform;box-shadow:0 1px 0 var(--shadow),0 5px 12px -6px var(--shadow);transition:scale .12s,box-shadow .12s;-webkit-tap-highlight-color:transparent}
+.mag.name{padding:8px 12px 9px;font:780 24px/1 var(--display);letter-spacing:-.02em}
+.mag.contact{display:inline-flex;align-items:center;gap:7px;padding:8px 13px 8px 10px;border:1px solid var(--line);border-radius:999px;background:var(--raised);color:var(--fg);font:500 13px/1 var(--body)}
+.mag.contact .ic{width:15px;height:15px;color:var(--sun)}
+.mag.lift{scale:1.07;cursor:grabbing;box-shadow:0 16px 30px -12px var(--shadow)}
+.mag.locked{cursor:default;box-shadow:0 0 0 2px var(--sun)}
+.scene.scrambling .mag{transition:transform .7s cubic-bezier(.2,.8,.2,1),scale .12s}
+.scene.shaking .fridge{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.note{position:absolute;padding:24px 16px 16px;border-radius:3px;background:var(--accent);color:var(--accent-ink);transform:rotate(-2deg);box-shadow:0 18px 30px -16px var(--shadow);transition:transform .15s;z-index:1;user-select:text;-webkit-user-select:text}
+.note::before{content:"";position:absolute;top:-8px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--fg);box-shadow:0 3px 6px var(--shadow)}
+.note.over{transform:rotate(0deg) scale(1.05)}
+.note.flash{animation:noteflash .4s ease-out}
+@keyframes noteflash{0%{transform:rotate(1deg) scale(1.08)}100%{transform:rotate(-2deg)}}
+.note-label{margin:0 0 6px;font:11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;opacity:.8}
+.note-value{margin:0 0 12px;font:650 17px/1.25 var(--body);overflow-wrap:anywhere}
+.note-hint{margin:0;font:500 14px/1.35 var(--body)}
+.note-actions{display:flex;flex-wrap:wrap;gap:6px}
+.btn-note{background:var(--accent-ink);border-color:var(--accent-ink);color:var(--accent);padding:7px 11px;font-size:12px}
+.slot{position:absolute;border:1.5px dashed var(--muted);border-radius:3px;pointer-events:none}
+.slot.filled{border-color:transparent}
+.spell-prompt{position:absolute;margin:0;font:12px/1.3 var(--mono);color:var(--muted);pointer-events:none;white-space:nowrap}
+.spell-prompt b{color:var(--fg);font-weight:500}
+
+/* ---------- falling ---------- */
+.fall-layer{position:absolute;inset:0;cursor:grab;touch-action:none}
+.fall-layer.grabbing{cursor:grabbing}
+.floor-line{position:absolute;left:0;right:0;height:1px;background:var(--line)}
+.tower-line{position:absolute;left:0;right:0;border-top:1px dashed var(--sun);pointer-events:none;z-index:2}
+.tower-line span{position:absolute;right:16px;bottom:6px;font:500 12px/1 var(--mono);color:var(--accent)}
+.chip{position:absolute;left:0;top:0;display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:var(--raised);color:var(--fg);font:500 15px/1 var(--body);white-space:nowrap;pointer-events:none;will-change:transform}
+.chip-name{padding:12px 20px;border-color:var(--fg);background:var(--fg);color:var(--bg);font:780 clamp(22px,4.2vw,32px)/1 var(--display);letter-spacing:-.02em}
+.chip-skill{background:transparent;color:var(--muted)}
+.chip-contact{border-color:var(--sun);background:var(--surface)}
+.chip-contact .ic{width:16px;height:16px;color:var(--sun)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- plane ---------- */
+.plane-hero{position:absolute;z-index:1;top:clamp(20px,6vh,60px);left:max(24px, env(safe-area-inset-left, 0px));max-width:min(62%,760px);pointer-events:none}
+.ph-name{margin:0;font:800 clamp(44px,9vw,124px)/.9 var(--display);font-variation-settings:"opsz" 96;letter-spacing:-.045em;text-wrap:balance}
+.ph-role{margin:16px 0 4px;font:13px/1.4 var(--mono);color:var(--muted)}
+.ph-tag{margin:0;font:500 clamp(17px,2vw,22px)/1.35 var(--display);max-width:30ch}
+.bullseye{position:absolute;z-index:1;border-radius:50%;pointer-events:none;background:repeating-radial-gradient(circle,transparent 0 31px,var(--line) 31px 32px);-webkit-mask:radial-gradient(circle,#000 40%,transparent 70%);mask:radial-gradient(circle,#000 40%,transparent 70%)}
+.target{position:absolute;z-index:2;right:max(24px, env(safe-area-inset-right, 0px));bottom:78px;width:270px;padding:14px 14px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);transition:border-color .2s,box-shadow .2s;user-select:text;-webkit-user-select:text}
+.target.landed{border-color:var(--sun);box-shadow:0 0 0 5px color-mix(in srgb,var(--sun) 25%,transparent)}
+.target-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font:11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.target-head i{font-style:normal;color:var(--accent)}
+.t-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)}
+.t-row .ic{width:15px;height:15px;color:var(--muted)}
+.t-v{flex:1;min-width:0;font:500 13px/1.3 var(--body);overflow-wrap:anywhere}
+.t-links{display:flex;gap:6px;padding-top:8px;border-top:1px solid var(--line)}
+.t-links a{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;color:var(--fg)}
+.t-links a:hover{border-color:var(--sun)}
+.t-links .ic{width:15px;height:15px}
+#scene-plane > canvas{z-index:3;pointer-events:none}
+.callout{position:absolute;z-index:4;padding:6px 10px;border-radius:8px;background:var(--fg);color:var(--bg);font:500 12px/1.2 var(--mono);white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,-100%);transition:opacity .2s}
+.callout.show{opacity:1}
+
+/* ---------- contact strip ---------- */
+.strip .wrap{display:flex;flex-wrap:wrap;gap:8px 10px;padding-block:16px}
+.cs-item{display:inline-flex;align-items:center;gap:9px;max-width:100%;padding:5px 5px 5px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);min-width:0}
+.cs-item .ic{color:var(--muted)}
+.cs-value{font:500 14px/1.2 var(--body);min-width:0;overflow-wrap:anywhere;user-select:text}
+.cs-link{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font:500 14px/1.2 var(--body);transition:border-color .15s}
+.cs-link:hover{border-color:var(--muted)}
+.cs-link .ic{color:var(--muted)}
+
+/* ---------- portfolio sheet ---------- */
+.info .wrap{display:grid;gap:72px;padding-block:56px 64px}
+.sec{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px}
+.sec > h2{margin:4px 0 0;font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.bio{margin:0 0 32px;max-width:34ch;font:500 clamp(22px,2.6vw,32px)/1.3 var(--display);letter-spacing:-.015em;text-wrap:pretty}
+.highs{list-style:none;margin:0 0 32px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px 28px}
+.highs li{display:grid;gap:6px;align-content:start;padding-top:14px;border-top:1px solid var(--line);min-width:0}
+.highs b{font:780 clamp(40px,5vw,58px)/1 var(--display);letter-spacing:-.035em;color:var(--accent);font-variant-numeric:tabular-nums}
+.highs span{font:12px/1.4 var(--mono);color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px 28px;margin:0}
+.facts div{min-width:0}
+.facts dt{font:12px/1.3 var(--mono);color:var(--muted)}
+.facts dd{margin:5px 0 0;font-weight:500;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent);vertical-align:1px}
+.list{list-style:none;margin:0;padding:0}
+.work li{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:6px 18px;align-items:baseline;padding:20px 0;border-top:1px solid var(--line)}
+.work li:last-child,.exp li:last-child{border-bottom:1px solid var(--line)}
+.yr{font:13px/1.4 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.w-title{margin:0;font:650 20px/1.25 var(--display);letter-spacing:-.01em}
+.w-title a{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.w-title a:hover{text-decoration:underline;text-underline-offset:3px}
+.w-title .ic{width:16px;height:16px;color:var(--muted)}
+.w-text{margin:4px 0 0;max-width:62ch;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.tag{padding:4px 8px;border:1px solid var(--line);border-radius:6px;font:12px/1.2 var(--mono);color:var(--muted);white-space:nowrap}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+.skills h3{margin:0 0 10px;font:500 12px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.skill{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:14px;background:var(--surface)}
+.exp li{display:grid;grid-template-columns:172px minmax(0,1fr);gap:4px 18px;padding:18px 0;border-top:1px solid var(--line)}
+.exp h3{margin:0;font:600 17px/1.3 var(--body)}
+.exp h3 span{color:var(--muted);font-weight:400}
+.exp p{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.faq .qa{padding:18px 0;border-top:1px solid var(--line)}
+.faq .qa:last-child{border-bottom:1px solid var(--line)}
+.qa h3{margin:0;font:600 17px/1.35 var(--body);text-wrap:balance}
+.qa p{margin:6px 0 0;max-width:68ch;color:var(--muted)}
+.hello{font-style:normal}
+.hello-kicker{margin:0 0 10px;color:var(--muted)}
+.hello-mail{display:block;margin:0 0 18px;font:760 clamp(30px,5.6vw,68px)/1.02 var(--display);letter-spacing:-.035em;text-decoration:none;overflow-wrap:anywhere}
+.hello-mail:hover{color:var(--accent)}
+.hello-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.hello-phone{font:500 18px/1.2 var(--mono);margin-right:6px;user-select:text}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:22px 40px;border-top:1px solid var(--line);font:12px/1.4 var(--mono);color:var(--muted)}
+.foot a{color:var(--muted)}
+.foot a:hover{color:var(--fg)}
+
+@media (max-width:720px){
+  .sec{grid-template-columns:1fr;gap:16px}
+  .info .wrap{gap:56px;padding-block:40px 48px}
+}
+@media (max-width:600px){
+  .stage{height:clamp(440px,66vh,640px);height:clamp(440px,66svh,640px)}
+  .work li{grid-template-columns:minmax(0,1fr)}
+  .tags{justify-content:flex-start}
+  .exp li{grid-template-columns:1fr}
+  .target{width:212px;bottom:84px}
+  .t-links a{width:28px;height:28px}
+  .plane-hero{max-width:calc(100% - 48px)}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+
+<a class="skip" href="#about">Skip to the portfolio</a>
+
+<header class="top band" id="top">
+  <div class="wrap">
+    <div class="brand"><h1 id="brand-name"></h1><span class="brand-role" id="brand-role"></span></div>
+    <a class="btn btn-accent hello-link" id="hello-link" href="#contact">Say hello</a>
+  </div>
+</header>
+
+<section class="stage" id="stage" aria-label="Interactive playground">
+  <div class="scene" id="scene-orbit" hidden>
+    <canvas aria-hidden="true"></canvas>
+    <div class="sun" aria-hidden="true"><span class="sun-name"></span><span class="sun-role"></span></div>
+    <div class="planets"></div>
+  </div>
+
+  <div class="scene" id="scene-magnets" hidden>
+    <div class="fridge">
+      <span class="handle" aria-hidden="true"></span>
+      <div class="note" data-value-scope></div>
+    </div>
+  </div>
+
+  <div class="scene" id="scene-falling" hidden>
+    <div class="floor-line" aria-hidden="true"></div>
+    <div class="tower-line" hidden><span></span></div>
+    <div class="fall-layer"></div>
+  </div>
+
+  <div class="scene" id="scene-plane" hidden>
+    <div class="plane-hero"><h2 class="ph-name"></h2><p class="ph-role"></p><p class="ph-tag"></p></div>
+    <div class="bullseye" aria-hidden="true"></div>
+    <div class="target"></div>
+    <canvas aria-hidden="true"></canvas>
+    <div class="callout" aria-live="polite"></div>
+  </div>
+
+  <div class="hud" id="hud" hidden><span id="hud-left"></span><span id="hud-right"></span></div>
+
+  <div class="stage-bar">
+    <p class="hint" id="hint"></p>
+    <div class="stage-actions">
+      <button type="button" class="btn" id="shake">Shuffle</button>
+      <button type="button" class="btn btn-accent" id="play">Play</button>
+    </div>
+  </div>
+
+  <div class="pop" id="pop" role="dialog" aria-label="Contact detail" data-value-scope hidden></div>
+
+  <div class="endcard" id="endcard" role="dialog" aria-modal="true" aria-labelledby="end-kicker" hidden>
+    <div class="endcard-panel">
+      <p class="end-kicker" id="end-kicker"></p>
+      <p class="end-num" id="end-num"></p>
+      <p class="end-unit" id="end-unit"></p>
+      <p class="end-best" id="end-best"></p>
+      <div class="end-actions">
+        <button type="button" class="btn btn-accent" id="end-again">Play again</button>
+        <button type="button" class="btn" id="end-done">Done</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip band" aria-label="Contact details"><div class="wrap" id="strip"></div></div>
+
+<main class="info band">
+  <div class="wrap">
+    <section class="sec" id="about"><h2>About</h2><div><p class="bio" id="bio"></p><ul class="highs" id="highlights" aria-label="Highlights"></ul><dl class="facts" id="facts"></dl></div></section>
+    <section class="sec" id="work"><h2>Selected work</h2><ol class="list work" id="work-list"></ol></section>
+    <section class="sec" id="skills"><h2>Skills</h2><div class="skills" id="skills-list"></div></section>
+    <section class="sec" id="experience"><h2>Experience</h2><ol class="list exp" id="exp-list"></ol></section>
+    <section class="sec" id="education"><h2>Education</h2><ol class="list exp" id="edu-list"></ol></section>
+    <section class="sec" id="faq"><h2>FAQ</h2><div class="faq" id="faq-list"></div></section>
+    <section class="sec" id="contact"><h2>Contact</h2><address class="hello" id="hello"></address></section>
+  </div>
+</main>
+
+<footer class="foot band"><div class="wrap"><span id="foot-left"></span><a href="#top" id="to-top">Back to top</a></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script id="site-config">
+/* =====================================================================
+   EDIT YOUR DETAILS HERE. Every toy and section reads from this block.
+   ===================================================================== */
+const CONFIG = {
+  name: "Ali Zaraket",
+  role: "AI & full-stack engineer",
+  headline: "I build AI-powered apps, from first pixel to production.",   // big line in the Plane toy
+  tagline: "i build ai apps people love",                   // Magnets spelling game: lowercase, no repeated words
+  magnetWords: ["agents", "models", "mobile", "web", "web3", "beirut", "code", "coffee", "ideas", "and", "with", "care", "let's", "talk", "soon", "!", "you", "fast", "hello"],
+  bio: "I'm a software engineer in Beirut building AI-powered products end to end: AI agents, custom-trained models, mobile apps and SaaS platforms, with blockchain experience across Bitcoin, Stacks and Web3.",
+  highlights: [                                              // the big numbers in the About section
+    { n: "2",  label: "AI agents in production" },
+    { n: "3",  label: "AI models trained" },
+    { n: "5+", label: "years shipping software" },
+    { n: "3",  label: "countries worked with" }
+  ],
+  city: "Beirut, Lebanon",
+  timezone: "Asia/Beirut",
+  availability: "Open to new projects",   // set to "" to hide
+  languages: "",                            // e.g. "Arabic, English"; empty hides it
+  replies: "",                              // e.g. "Usually within a day"; empty hides it
+  contacts: [
+    { id: "email",    label: "Email",    icon: "mail",  value: "alizaraket600@gmail.com", href: "mailto:alizaraket600@gmail.com", open: "Open mail app", copy: true },
+    { id: "phone",    label: "Phone",    icon: "phone", value: "+961 78 856 374",         href: "tel:+96178856374",               open: "Call",          copy: true },
+    { id: "whatsapp", label: "WhatsApp", icon: "chat",  value: "+961 78 856 374",         href: "https://wa.me/96178856374",      open: "Open WhatsApp" },
+    { id: "cv",       label: "CV",       icon: "file",  value: "Available on request",    href: "",                               open: "Open CV" }
+    // Add more when you have them, for example:
+    // { id: "linkedin", label: "LinkedIn", icon: "linkedin", value: "in/your-handle", href: "https://www.linkedin.com/in/your-handle", open: "Open LinkedIn" },
+    // { id: "github",   label: "GitHub",   icon: "code",     value: "@your-handle",   href: "https://github.com/your-handle",          open: "Open GitHub" },
+  ],
+  projects: [
+    { year: "2026–now",  title: "Beevi",                   text: "A multi-tenant business platform for gyms, clinics and salons. I ship whole modules: WhatsApp automations and a template builder, agency projects, Google Meet and Zoom scheduling, website lead forms and an in-app AI copilot.", tags: ["Next.js", "Supabase", "TypeScript"], href: "" },
+    { year: "2023–now",  title: "District e-commerce platform", text: "The full front end in Next.js and React, the production shopping app in Flutter, and 2 AI agents now running in production.", tags: ["Next.js", "React", "Flutter", "AI agents"], href: "" },
+    { year: "2024",      title: "Signal21 analytics",      text: "Added Bitcoin and Stacks chain data to a crypto analytics platform, with data grouping, CMS workflows and caching behind it.", tags: ["Next.js", "Node.js", "PostgreSQL"], href: "" },
+    { year: "Freelance", title: "ImageAssist",             text: "Before-and-after photography for professional and clinical image work. I built the front end, worked on the Node.js and TypeScript back end with Firebase, and helped build and train 3 AI models.", tags: ["Flutter", "TypeScript", "Node.js", "Firebase", "AI models"], href: "" },
+    { year: "2021–22",   title: "Stacksonchain",           text: "The front end of a blockchain analytics platform: on-chain data endpoints, charts and fast, data-heavy views.", tags: ["React", "Stacks API", "Data viz"], href: "" }
+  ],
+  skills: {
+    "AI": ["AI agents", "Model training", "OpenAI API", "In-app AI copilots"],
+    "Mobile": ["Flutter", "Dart", "Responsive UI", "Widget architecture", "REST APIs", "Performance"],
+    "Backend & data": ["Node.js", "TypeScript", "Python", "Django", "PostgreSQL", "Supabase", "Firebase", "Caching"],
+    "Web": ["JavaScript", "TypeScript", "React", "Next.js", "SSR/SSG", "SEO"],
+    "Blockchain & tools": ["Bitcoin", "Stacks", "Web3 & Thirdweb", "Smart-contract integrations", "Git & GitHub", "Figma"]
+  },
+  experience: [
+    { years: "2026 – now",          role: "Full-Stack Developer",            org: "Beevi",         text: "Freelance, ongoing. I build product modules end to end on Next.js, Supabase and Vercel, from database design and row-level security to the UI, and I set up the staging environment and CI release flow." },
+    { years: "2023 – now",         role: "Flutter & Frontend Developer",    org: "District General Trading and Contracting", text: "Full-time, Lebanon. I built the full front end in Next.js and React and the production e-commerce app in Flutter, plus 2 AI agents that run in production, and take features from design hand-off to release." },
+    { years: "2024",                role: "Full-Stack Developer",            org: "Signal21",      text: "Part-time, remote (US). Next.js, React, Node.js and PostgreSQL features for a crypto analytics platform." },
+    { years: "Freelance",           role: "Full-Stack & Flutter Developer",  org: "ImageAssist",   text: "Built the front end and worked on the Node.js and TypeScript back end with Firebase, and helped build and train 3 AI models for before-and-after photography workflows." },
+    { years: "Aug – Dec 2022",      role: "Full-Stack Web Developer Intern", org: "Eddy's Group",  text: "Beirut. Thirdweb SDK for Web3 features, Next.js with SSR/SSG, and content through Sanity.io." },
+    { years: "Sep 2021 – Sep 2022", role: "Frontend Developer",              org: "Stacksonchain", text: "Remote (UAE). React front end, on-chain data and charts for a blockchain analytics platform." },
+    { years: "May – Jul 2021",      role: "Mobile Frontend Developer Intern", org: "Mobile Arts",  text: "Hadath, Lebanon. A reusable API-driven mobile template, an in-app WebView for games and a Java SDK integration." }
+  ],
+  education: [
+    { years: "", title: "Computer Science Studies", org: "Al-Maaref University, Beirut" }
+  ],
+
+  // Which toy the page shows: "orbit", "magnets", "falling" or "plane".
+  toy: "orbit",
+
+  // Search engines and AI answer engines (build.js uses this for the live site)
+  seo: {
+    siteUrl: "https://ali-zaraket.vercel.app",   // the live address: canonical link, sitemap, structured data
+    title: "Ali Zaraket · AI & Full-Stack Engineer in Beirut, Lebanon",
+    description: "Ali Zaraket is an AI and full-stack engineer in Beirut, Lebanon, building AI agents, mobile and web apps, SaaS platforms and Web3 products. Get in touch.",
+    keywords: ["Ali Zaraket", "AI engineer Beirut", "AI developer Lebanon", "AI agent developer", "AI model training", "full-stack developer Lebanon", "software engineer Beirut", "mobile app developer Lebanon", "Flutter developer Beirut", "Next.js developer", "React developer", "TypeScript developer", "Node.js developer", "Supabase developer", "Firebase developer", "SaaS developer", "Web3 developer", "blockchain developer Lebanon", "freelance developer Lebanon", "remote software engineer"]
+  },
+
+  // Shown on the page, and given to search and answer engines as structured FAQ data
+  faq: [
+    { q: "Who is Ali Zaraket?", a: "Ali Zaraket is an AI and full-stack engineer based in Beirut, Lebanon. Ali builds AI agents, custom-trained models, mobile and web apps, SaaS platforms and blockchain products, and has worked with teams in Lebanon, the United States and the United Arab Emirates." },
+    { q: "Does Ali Zaraket have AI experience?", a: "Yes. Ali built 2 AI agents that run in production on District's e-commerce platform, helped build and train 3 AI models at ImageAssist, and works on an in-app AI copilot for Beevi." },
+    { q: "What is Ali Zaraket working on now?", a: "Ali is a freelance full-stack developer on Beevi, a business platform for gyms, clinics and salons, and at District General Trading and Contracting builds the Next.js and React front end, the Flutter e-commerce app and AI agents." },
+    { q: "Which technologies does Ali use?", a: "AI agents, model training and the OpenAI API; Flutter and Dart for mobile; React, Next.js and TypeScript for the web; Node.js, Python, Django, PostgreSQL, Supabase and Firebase for back ends; and Bitcoin, Stacks and Thirdweb for Web3." },
+    { q: "Is Ali available for freelance or remote work?", a: "Yes. Ali is open to new projects, including remote work, and has worked remotely with teams in the United States and the United Arab Emirates." },
+    { q: "How can I contact Ali Zaraket?", a: "Email alizaraket600@gmail.com, or call or message on WhatsApp at +961 78 856 374. Ali works on Beirut time (UTC+2, UTC+3 in summer)." }
+  ]
+};
+</script>
+
+<script id="site-templates">
+/* Pure page templates with no DOM access. build.js runs this same code in Node to write
+   the content straight into the HTML, so search engines and AI crawlers can read it without JavaScript. */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ICONS = {
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/>',
+  phone: '<path d="M6.6 3.5h2.7l1.4 4-2.1 1.3a12 12 0 0 0 6.6 6.6l1.3-2.1 4 1.4v2.7a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/>',
+  chat: '<path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/>',
+  linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5a2.5 2.5 0 0 1 5 0V17"/>',
+  code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  camera: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+  work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
+  arrow: '<path d="M7 17 17 7M8 7h9v9"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  play: '<path d="M8 5.5v13l10-6.5z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>'
+};
+const ic = name => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+const isExternal = href => /^https?:/i.test(href || '');
+const extAttrs = href => isExternal(href) ? ' target="_blank" rel="noopener"' : '';
+const contactOf = (C, id) => C.contacts.find(c => c.id === id);
+
+function normalizeConfig(C) {
+  const email = contactOf(C, 'email');
+  C.contacts.forEach(c => {
+    if (!c.href && c.id === 'cv' && email) { c.href = email.href + '?subject=' + encodeURIComponent('CV request'); c.open = 'Ask by email'; }
+  });
+  return C;
+}
+
+function actionsHTML(c, cls = 'btn') {
+  let out = '';
+  if (c.copy) out += `<button type="button" class="${cls}" data-copy="${c.id}">${ic('copy')}Copy</button>`;
+  if (c.href) out += `<a class="${cls}" href="${esc(c.href)}"${extAttrs(c.href)}>${esc(c.open || 'Open')}${isExternal(c.href) ? ic('arrow') : ''}</a>`;
+  return out;
+}
+
+/* Every block of the portfolio sheet, as HTML strings. */
+function sheetParts(C, opts = {}) {
+  const email = contactOf(C, 'email'), phone = contactOf(C, 'phone');
+  const others = C.contacts.filter(c => !c.copy && c.href);
+  return {
+    strip: C.contacts.map(c => c.copy
+      ? `<div class="cs-item" data-value-scope>${ic(c.icon)}<span class="sr">${esc(c.label)}: </span><span class="cs-value copy-src">${esc(c.value)}</span><button type="button" class="icon-btn" data-copy="${c.id}" aria-label="Copy ${esc(c.label.toLowerCase())}">${ic('copy')}</button></div>`
+      : (c.href ? `<a class="cs-link" href="${esc(c.href)}"${extAttrs(c.href)}>${ic(c.icon)}${esc(c.label)}</a>` : '')).join(''),
+    facts: [
+      C.city && `<div><dt>Based in</dt><dd>${esc(C.city)}</dd></div>`,
+      `<div><dt>Local time</dt><dd id="local-time">${esc(C.timezone)}</dd></div>`,
+      C.availability && `<div><dt>Status</dt><dd><span class="dot" aria-hidden="true"></span>${esc(C.availability)}</dd></div>`,
+      C.languages && `<div><dt>Languages</dt><dd>${esc(C.languages)}</dd></div>`,
+      C.replies && `<div><dt>Replies</dt><dd>${esc(C.replies)}</dd></div>`
+    ].filter(Boolean).join(''),
+    work: C.projects.map(p => `
+    <li><span class="yr">${esc(p.year)}</span>
+      <div><h3 class="w-title">${p.href ? `<a href="${esc(p.href)}" target="_blank" rel="noopener">${esc(p.title)}${ic('arrow')}</a>` : esc(p.title)}</h3><p class="w-text">${esc(p.text)}</p></div>
+      <div class="tags">${p.tags.map(tg => `<span class="tag">${esc(tg)}</span>`).join('')}</div></li>`).join(''),
+    skills: Object.entries(C.skills).map(([g, list]) =>
+      `<div><h3>${esc(g)}</h3><div class="chips">${list.map(s => `<span class="skill">${esc(s)}</span>`).join('')}</div></div>`).join(''),
+    exp: C.experience.map(x => `
+    <li><span class="yr">${esc(x.years)}</span><div><h3>${esc(x.role)} <span>· ${esc(x.org)}</span></h3><p>${esc(x.text)}</p></div></li>`).join(''),
+    edu: (C.education || []).map(x => `
+    <li><span class="yr">${esc(x.years || '')}</span><div><h3>${esc(x.title)} <span>· ${esc(x.org)}</span></h3></div></li>`).join(''),
+    faq: (C.faq || []).map(x => `<div class="qa"><h3>${esc(x.q)}</h3><p>${esc(x.a)}</p></div>`).join(''),
+    highlights: (C.highlights || []).map(h => `<li><b>${esc(h.n)}</b><span>${esc(h.label)}</span></li>`).join(''),
+    hello: `
+    <p class="hello-kicker">Have a project in mind? Say hello.</p>
+    ${email ? `<div data-value-scope><a class="hello-mail copy-src" href="${esc(email.href)}">${esc(email.value)}</a>
+      <div class="hello-row"><button type="button" class="btn btn-accent" data-copy="email">${ic('copy')}Copy email</button></div></div>` : ''}
+    ${phone ? `<div class="hello-row" data-value-scope><span class="hello-phone copy-src">${esc(phone.value)}</span>
+      <button type="button" class="btn" data-copy="phone">${ic('copy')}Copy number</button><a class="btn" href="${esc(phone.href)}">${ic('phone')}Call</a></div>` : ''}
+    <div class="hello-row">${others.map(c => `<a class="btn" href="${esc(c.href)}"${extAttrs(c.href)}>${ic(c.icon)}${esc(c.label)}</a>`).join('')}</div>
+    ${opts.appNote ? '<p class="hello-kicker" style="margin-top:18px">Phone and email buttons open your apps where your browser allows it. You can always copy the details above.</p>' : ''}`,
+    foot: `© ${new Date().getFullYear()} ${esc(C.name)} · ${esc(C.city)}`
+  };
+}
+</script>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+/* The live site (build.js) sets window.SITE_MODE to its toy; the artifact uses CONFIG.toy. */
+const TOYS = ['orbit', 'magnets', 'falling', 'plane'];
+const IS_SITE = TOYS.includes(window.SITE_MODE);
+const ACTIVE_TOY = IS_SITE ? window.SITE_MODE : (TOYS.includes(CONFIG.toy) ? CONFIG.toy : 'orbit');
+
+normalizeConfig(CONFIG);
+const contactById = id => contactOf(CONFIG, id);
+
+/* theme colours for canvas drawing */
+const COL = {};
+function readColors() {
+  const s = getComputedStyle(document.documentElement);
+  ['bg', 'fg', 'muted', 'line', 'sun', 'surface'].forEach(k => COL[k] = s.getPropertyValue('--' + k).trim() || '#888888');
+}
+readColors();
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', readColors);
+new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+function rgba(hex, a) {
+  let m = hex.replace('#', '');
+  if (m.length === 3) m = m.split('').map(ch => ch + ch).join('');
+  const n = parseInt(m.slice(0, 6), 16);
+  if (isNaN(n)) return hex;
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+const fontsReady = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1500))]);
+
+/* ---------- toast + copy ---------- */
+const toastEl = $('#toast'); let toastT = 0;
+function toast(msg, ms = 1800) {
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), ms);
+}
+function copyText(text, label, scope) {
+  try {
+    navigator.clipboard.writeText(text).then(() => toast(`Copied ${label}`), () => fallback());
+  } catch (e) { fallback(); }
+  function fallback() {
+    const src = scope && scope.querySelector('.copy-src');
+    if (src) { const r = document.createRange(); r.selectNodeContents(src); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    toast('Selected. Press Ctrl+C (⌘C on Mac) to copy', 2600);
+  }
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  const c = contactById(b.dataset.copy);
+  if (c) copyText(c.value, c.label.toLowerCase(), b.closest('[data-value-scope]'));
+});
+
+/* ---------- stage + popover ---------- */
+const stage = $('#stage');
+let SW = stage.clientWidth, SH = stage.clientHeight;
+const pop = $('#pop');
+const SECTION_IDS = ['work', 'experience', 'skills', 'about', 'contact'];
+function openPop(id, x, y) {
+  if (SECTION_IDS.includes(id)) { document.getElementById(id).scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' }); return; }
+  const c = contactById(id); if (!c) return;
+  pop.innerHTML = `<button type="button" class="icon-btn pop-x" aria-label="Close">${ic('x')}</button>
+    <p class="pop-label">${esc(c.label)}</p><p class="pop-value copy-src">${esc(c.value)}</p>
+    <div class="pop-actions">${actionsHTML(c)}</div>`;
+  pop.hidden = false;
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  const left = clamp(x - pw / 2, 12, Math.max(12, SW - pw - 12));
+  let top = y + 46; if (top + ph > SH - 64) top = y - ph - 46;
+  pop.style.left = left + 'px'; pop.style.top = clamp(top, 12, Math.max(12, SH - ph - 12)) + 'px';
+  $('.pop-x', pop).onclick = closePop;
+}
+function closePop() { pop.hidden = true; }
+document.addEventListener('pointerdown', e => { if (!pop.hidden && !pop.contains(e.target)) closePop(); }, true);
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  closePop();
+  if (!$('#endcard').hidden) $('#endcard').hidden = true;
+});
+
+/* =====================================================================
+   GAME FRAME (shared by every toy)
+   ===================================================================== */
+let currentMode = null;
+const Game = (() => {
+  const hud = $('#hud'), hl = $('#hud-left'), hr = $('#hud-right'), end = $('#endcard'), playBtn = $('#play');
+  let active = false, locked = false, mode = null, cfg = null, score = 0, t0 = 0, raf = 0;
+  const key = m => 'pg-best-' + m;
+  const getBest = m => { const v = parseFloat(store.get(key(m))); return isFinite(v) ? v : null; };
+
+  function label() {
+    if (!currentMode) return;
+    if (active) { playBtn.innerHTML = `${ic('x')}Quit`; return; }
+    const c = MODES[currentMode].game, b = getBest(currentMode);
+    playBtn.innerHTML = `${ic('play')}Play${b != null ? ` <span class="best">best ${esc(c.format(b))}</span>` : ''}`;
+    playBtn.title = c.name;
+  }
+  function elapsed() { return (performance.now() - t0) / 1000; }
+  function render() { const [l, r] = cfg.hud(elapsed(), score); hl.textContent = l; hr.textContent = r; }
+  function tick() {
+    if (!active || locked) return;
+    if (cfg.duration && elapsed() >= cfg.duration) { timeUp(); return; }
+    render(); raf = requestAnimationFrame(tick);
+  }
+  function timeUp() { locked = true; render(); if (cfg.onTimeUp) cfg.onTimeUp(); else finish(score); }
+  function start() {
+    closePop(); end.hidden = true;
+    mode = currentMode; cfg = MODES[mode].game; score = 0; active = true; locked = false; t0 = performance.now();
+    cfg.start && cfg.start();
+    hud.hidden = false; label(); render(); tick();
+    toast(cfg.intro, 3200);
+  }
+  function add(n) { if (!active || locked) return; score += n; render(); hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); }
+  function set(n) { if (!active) return; score = n; render(); }
+  function stopRun() { active = false; locked = false; cancelAnimationFrame(raf); cfg.stop && cfg.stop(); hud.hidden = true; label(); }
+  function finish(final) {
+    if (!active) return;
+    stopRun();
+    const prev = getBest(mode);
+    const better = cfg.better === 'lower' ? (prev == null || final < prev) : (final > 0 && (prev == null || final > prev));
+    if (better) store.set(key(mode), String(final));
+    $('#end-kicker').textContent = cfg.name;
+    $('#end-num').textContent = cfg.format(final);
+    $('#end-unit').textContent = cfg.unit;
+    $('#end-best').textContent = better ? 'New best!' : (prev != null ? `Best: ${cfg.format(prev)}` : 'Try again for a score');
+    end.hidden = false; label();
+    $('#end-again').focus({ preventScroll: true });
+  }
+  function quit() { if (active) stopRun(); }
+  playBtn.addEventListener('click', () => active ? quit() : start());
+  $('#end-again').addEventListener('click', start);
+  $('#end-done').addEventListener('click', () => { end.hidden = true; });
+  return { start, quit, finish, add, set, elapsed, label, score: () => score, isActive: m => active && mode === m, get locked() { return locked; } };
+})();
+
+/* =====================================================================
+   1. ORBIT: contacts as planets, comets as the game
+   ===================================================================== */
+const Orbit = (() => {
+  const el = $('#scene-orbit'), cv = $('canvas', el), ctx = cv.getContext('2d');
+  const sun = $('.sun', el), layer = $('.planets', el);
+  const F = [0.42, 0.68, 0.94], SPD = [0.26, 0.16, 0.105];
+  let inited = false, running = false, raf = 0, last = 0, t = 0;
+  let w = 0, h = 0, dpr = 1, cx = 0, cy = 0, R = 30, GM = 1e7, sunR = 30, rings = [];
+  const planets = []; let comets = [], sparks = [], stars = [], aim = null;
+  const local = e => { const r = el.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+
+  function init() {
+    const items = CONFIG.contacts.map(c => ({ id: c.id, label: c.label, icon: c.icon, value: c.value }));
+    items.push(
+      { id: 'work', label: 'Work', icon: 'work', value: 'Selected projects' },
+      { id: 'experience', label: 'Experience', icon: 'clock', value: 'Where I have worked' },
+      { id: 'skills', label: 'Skills', icon: 'layers', value: 'What I work with' }
+    );
+    items.forEach((it, i) => {
+      const ring = Math.min(2, Math.floor(i * 3 / items.length));
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'planet';
+      b.setAttribute('aria-label', `${it.label}: ${it.value}`);
+      b.innerHTML = `<span class="planet-body">${ic(it.icon)}</span><span class="planet-label">${esc(it.label)}</span>`;
+      layer.appendChild(b);
+      const p = { ...it, el: b, ring, phase: 0, x: 0, y: 0, vx: 0, vy: 0, mode: 'orbit' };
+      planets.push(p); bindPlanet(p);
+    });
+    for (let r = 0; r < 3; r++) {
+      const ps = planets.filter(p => p.ring === r);
+      ps.forEach((p, i) => p.phase = (i / ps.length) * Math.PI * 2 + r * 1.1);
+    }
+    stars = Array.from({ length: 90 }, () => ({ x: Math.random(), y: Math.random(), s: Math.random() < 0.15 ? 2 : 1, p: Math.random() * 6.3 }));
+    $('.sun-name', el).textContent = CONFIG.name;
+    $('.sun-role', el).textContent = `${CONFIG.role} · ${CONFIG.city}`;
+    el.addEventListener('pointerdown', onDown);
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+    el.addEventListener('pointercancel', () => { aim = null; });
+    inited = true;
+  }
+
+  function bindPlanet(p) {
+    let s = null, samples = [];
+    p.el.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      e.stopPropagation();
+      p.el.setPointerCapture(e.pointerId);
+      const pt = local(e);
+      s = { x: pt.x, y: pt.y, ox: pt.x - p.x, oy: pt.y - p.y, moved: 0 };
+      samples = [{ x: pt.x, y: pt.y, t: performance.now() }];
+      p.mode = 'drag'; p.el.classList.add('held');
+    });
+    p.el.addEventListener('pointermove', e => {
+      if (!s) return;
+      const pt = local(e);
+      s.moved = Math.max(s.moved, Math.hypot(pt.x - s.x, pt.y - s.y));
+      p.x = clamp(pt.x - s.ox, R, w - R); p.y = clamp(pt.y - s.oy, R, h - R);
+      samples.push({ x: pt.x, y: pt.y, t: performance.now() }); if (samples.length > 6) samples.shift();
+    });
+    const end = () => {
+      if (!s) return;
+      p.el.classList.remove('held');
+      if (s.moved < 6) { p.mode = 'free'; p.vx = p.vy = 0; openPop(p.id, p.x, p.y); }
+      else {
+        const a = samples[0], b = samples[samples.length - 1], dt = Math.max(16, b.t - a.t) / 1000;
+        let vx = (b.x - a.x) / dt, vy = (b.y - a.y) / dt; const sp = Math.hypot(vx, vy), max = 2600;
+        if (sp > max) { vx *= max / sp; vy *= max / sp; }
+        p.vx = vx; p.vy = vy; p.mode = 'free';
+      }
+      s = null;
+    };
+    p.el.addEventListener('pointerup', end);
+    p.el.addEventListener('pointercancel', end);
+    p.el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPop(p.id, p.x, p.y); } });
+  }
+
+  function onDown(e) {
+    if (e.button > 0 || e.target.closest('.planet')) return;
+    el.setPointerCapture(e.pointerId);
+    const pt = local(e); aim = { sx: pt.x, sy: pt.y, x: pt.x, y: pt.y };
+  }
+  function onMove(e) { if (!aim) return; const pt = local(e); aim.x = pt.x; aim.y = pt.y; }
+  function onUp() {
+    if (!aim) return;
+    const dx = aim.x - aim.sx, dy = aim.y - aim.sy;
+    if (Math.hypot(dx, dy) > 12) {
+      let vx = dx * 3.4, vy = dy * 3.4; const sp = Math.hypot(vx, vy), max = 1600;
+      if (sp > max) { vx *= max / sp; vy *= max / sp; }
+      comets.push({ x: aim.sx, y: aim.sy, vx, vy, trail: [], life: 0 });
+      if (comets.length > 40) comets.shift();
+    }
+    aim = null;
+  }
+
+  function burst(x, y, n) {
+    for (let i = 0; i < n; i++) { const a = rand(0, 6.28), s = rand(40, 220); sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: rand(0.35, 0.8), age: 0 }); }
+  }
+  function hitPlanet(p, c) {
+    p.el.classList.remove('hit'); void p.el.offsetWidth; p.el.classList.add('hit');
+    if (p.mode !== 'drag') { p.mode = 'free'; p.vx += c.vx * 0.25; p.vy += c.vy * 0.25; }
+    burst(c.x, c.y, 16);
+    if (Game.isActive('orbit')) Game.add(1);
+  }
+
+  function step(dt) {
+    t += dt * (REDUCED ? 0.4 : 1);
+    for (const p of planets) {
+      const th = p.phase + SPD[p.ring] * t, rr = rings[p.ring];
+      const tx = cx + Math.cos(th) * rr.x, ty = cy + Math.sin(th) * rr.y;
+      if (p.mode === 'orbit') { p.x = tx; p.y = ty; }
+      else if (p.mode === 'free') {
+        p.vx += ((tx - p.x) * 7 - p.vx * 2.4) * dt; p.vy += ((ty - p.y) * 7 - p.vy * 2.4) * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        if (p.x < R) { p.x = R; p.vx = Math.abs(p.vx) * 0.6; } else if (p.x > w - R) { p.x = w - R; p.vx = -Math.abs(p.vx) * 0.6; }
+        if (p.y < R) { p.y = R; p.vy = Math.abs(p.vy) * 0.6; } else if (p.y > h - R) { p.y = h - R; p.vy = -Math.abs(p.vy) * 0.6; }
+        if (Math.hypot(tx - p.x, ty - p.y) < 1.5 && Math.hypot(p.vx, p.vy) < 20) p.mode = 'orbit';
+      }
+    }
+    for (const c of comets) {
+      const dx = cx - c.x, dy = cy - c.y, r2 = dx * dx + dy * dy + 1500, r = Math.sqrt(r2), a = GM / r2;
+      c.vx += a * dx / r * dt; c.vy += a * dy / r * dt;
+      c.x += c.vx * dt; c.y += c.vy * dt; c.life += dt;
+      c.trail.push(c.x, c.y); if (c.trail.length > 44) c.trail.splice(0, 2);
+      if (r < sunR) { c.dead = true; burst(c.x, c.y, 10); continue; }
+      for (const p of planets) { if (Math.hypot(p.x - c.x, p.y - c.y) < R + 5) { c.dead = true; hitPlanet(p, c); break; } }
+      if (c.x < -300 || c.x > w + 300 || c.y < -300 || c.y > h + 300 || c.life > 8) c.dead = true;
+    }
+    comets = comets.filter(c => !c.dead);
+    for (const s of sparks) { s.age += dt; s.x += s.vx * dt; s.y += s.vy * dt; s.vx *= 0.94; s.vy *= 0.94; }
+    sparks = sparks.filter(s => s.age < s.life);
+  }
+
+  function draw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = COL.fg;
+    for (const s of stars) { ctx.globalAlpha = 0.12 + 0.3 * (0.5 + 0.5 * Math.sin(t * 1.3 + s.p)); ctx.fillRect(s.x * w, s.y * h, s.s, s.s); }
+    ctx.globalAlpha = 1;
+    const gr = Math.min(w, h) * 0.34 * (1 + 0.03 * Math.sin(t * 1.5));
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, gr);
+    g.addColorStop(0, rgba(COL.sun, 0.3)); g.addColorStop(0.45, rgba(COL.sun, 0.08)); g.addColorStop(1, rgba(COL.sun, 0));
+    ctx.fillStyle = g; ctx.fillRect(cx - gr, cy - gr, gr * 2, gr * 2);
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.setLineDash([2, 6]);
+    for (const rr of rings) { ctx.beginPath(); ctx.ellipse(cx, cy, rr.x, rr.y, 0, 0, Math.PI * 2); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.lineCap = 'round';
+    for (const c of comets) {
+      const tr = c.trail, n = tr.length / 2;
+      ctx.strokeStyle = COL.sun;
+      for (let i = 1; i < n; i++) {
+        ctx.globalAlpha = (i / n) * 0.7; ctx.lineWidth = 1 + 2.2 * (i / n);
+        ctx.beginPath(); ctx.moveTo(tr[2 * i - 2], tr[2 * i - 1]); ctx.lineTo(tr[2 * i], tr[2 * i + 1]); ctx.stroke();
+      }
+      ctx.globalAlpha = 1; ctx.fillStyle = COL.sun; ctx.beginPath(); ctx.arc(c.x, c.y, 3.6, 0, 6.29); ctx.fill();
+    }
+    ctx.fillStyle = COL.sun;
+    for (const s of sparks) { ctx.globalAlpha = 1 - s.age / s.life; ctx.fillRect(s.x - 1, s.y - 1, 2.2, 2.2); }
+    ctx.globalAlpha = 1;
+    if (aim) {
+      const dx = aim.x - aim.sx, dy = aim.y - aim.sy, d = Math.hypot(dx, dy);
+      ctx.strokeStyle = COL.fg; ctx.fillStyle = COL.fg; ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.arc(aim.sx, aim.sy, 4, 0, 6.29); ctx.fill();
+      if (d > 12) {
+        ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.moveTo(aim.sx, aim.sy); ctx.lineTo(aim.x, aim.y); ctx.stroke(); ctx.setLineDash([]);
+        const a = Math.atan2(dy, dx);
+        ctx.beginPath(); ctx.moveTo(aim.x, aim.y);
+        ctx.lineTo(aim.x - Math.cos(a - 0.4) * 11, aim.y - Math.sin(a - 0.4) * 11);
+        ctx.lineTo(aim.x - Math.cos(a + 0.4) * 11, aim.y - Math.sin(a + 0.4) * 11); ctx.closePath(); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    for (const p of planets) p.el.style.transform = `translate3d(${p.x - R}px,${p.y - R}px,0)`;
+  }
+
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(0.033, (now - last) / 1000); last = now;
+    step(dt); draw();
+    raf = requestAnimationFrame(loop);
+  }
+  function resize() {
+    if (!inited) return;
+    w = el.clientWidth; h = el.clientHeight; dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    R = w < 560 ? 24 : 30; layer.style.setProperty('--d', (R * 2) + 'px');
+    const top = 12, bottom = h - 64;
+    cx = w / 2; cy = (top + bottom) / 2;
+    const mx = w / 2 - R - 12, my = (bottom - top) / 2 - R - 16;
+    rings = F.map(f => ({ x: Math.max(40, mx * f), y: Math.max(30, my * f) }));
+    const m = Math.min(w, h); GM = 1.1e7 * Math.pow(m / 600, 3); sunR = Math.max(24, m * 0.05);
+    sun.style.left = cx + 'px'; sun.style.top = cy + 'px';
+  }
+  function start() {
+    if (!inited) init();
+    resize(); running = true; last = performance.now();
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+  }
+  function stop() { running = false; cancelAnimationFrame(raf); aim = null; }
+  function shake() {
+    planets.forEach(p => { if (p.mode === 'drag') return; const a = rand(0, 6.28), s = rand(900, 1800); p.vx = Math.cos(a) * s; p.vy = Math.sin(a) * s; p.mode = 'free'; });
+  }
+  return {
+    start, stop, resize, shake, shakeLabel: 'Scatter',
+    hint: 'Fling a planet · tap one to open it · swipe empty space to launch a comet',
+    game: {
+      name: 'Comet run', unit: 'planets hit in 20 seconds', better: 'higher', duration: 20,
+      intro: 'Comet run: swipe empty space to launch comets. Hit as many planets as you can in 20 seconds.',
+      format: n => String(n),
+      hud: (e, s) => [`${Math.max(0, Math.ceil(20 - e))}s`, `${s} hits`],
+      start() { comets = []; }
+    }
+  };
+})();
+
+/* =====================================================================
+   2. MAGNETS: a fridge door of word magnets, spell-it as the game
+   ===================================================================== */
+const Magnets = (() => {
+  const el = $('#scene-magnets'), board = $('.fridge', el), note = $('.note', el);
+  let inited = false, touched = false, w = 0, h = 0, z = 10, noteBox = { x: 0, y: 0, w: 0, h: 0 };
+  const tiles = []; let slots = [], prompt = null, spell = null;
+  const TAG = CONFIG.tagline.trim().split(/\s+/);
+  const EXTRAS = (CONFIG.magnetWords || []).filter(x => !TAG.includes(x));
+
+  function makeTile(text, kind, extra = {}) {
+    const isBtn = kind === 'contact';
+    const t = document.createElement(isBtn ? 'button' : 'span');
+    t.className = 'mag ' + kind;
+    if (isBtn) { t.type = 'button'; t.innerHTML = ic(extra.icon) + esc(text); t.setAttribute('aria-label', `${text}: ${extra.value}. Show on the note`); }
+    else { t.textContent = text; t.setAttribute('aria-hidden', 'true'); }
+    board.appendChild(t);
+    const tile = { el: t, text, kind, x: 0, y: 0, r: rand(-3, 3), w: 0, h: 0, ...extra };
+    bind(tile); tiles.push(tile); return tile;
+  }
+  const apply = t => { t.el.style.transform = `translate(${t.x}px,${t.y}px) rotate(${t.r}deg)`; };
+  const measure = () => tiles.forEach(t => { const hid = t.el.hidden; t.el.hidden = false; t.w = t.el.offsetWidth; t.h = t.el.offsetHeight; t.el.hidden = hid; });
+
+  function init() {
+    ['hi,', "i'm"].forEach(x => makeTile(x, 'word', { group: 'a' }));
+    makeTile(CONFIG.name, 'name', { group: 'a' });
+    TAG.forEach(x => makeTile(x, 'word', { group: 'b', spell: true }));
+    EXTRAS.forEach(x => makeTile(x, 'word', { group: 'c' }));
+    CONFIG.contacts.forEach(c => makeTile(c.label, 'contact', { id: c.id, icon: c.icon, value: c.value }));
+    resetNote();
+    measure(); layout();
+    fontsReady.then(() => { measure(); if (!touched) layout(); });
+    inited = true;
+  }
+
+  function flow(list, left, right, top, limit = Infinity, gx = 8, gy = 10) {
+    let x = left, y = top, rowH = 0;
+    for (const t of list) {
+      if (x + t.w > right && x > left) { x = left; y += rowH + gy; rowH = 0; }
+      if (y + t.h > limit) { t.el.hidden = true; continue; }
+      t.el.hidden = false; t.x = x; t.y = y; x += t.w + gx; rowH = Math.max(rowH, t.h);
+    }
+    return y + rowH;
+  }
+  function placeNote() {
+    const narrow = w < 640;
+    const nW = narrow ? 156 : 214, nH = narrow ? 132 : 164;
+    const nX = w - nW - (narrow ? 16 : 48), nY = narrow ? h - 64 - nH : 44;
+    noteBox = { x: nX, y: nY, w: nW, h: nH };
+    Object.assign(note.style, { left: nX + 'px', top: nY + 'px', width: nW + 'px', minHeight: nH + 'px' });
+  }
+  function layout() {
+    w = el.clientWidth; h = el.clientHeight;
+    const narrow = w < 640;
+    placeNote();
+    const left = narrow ? 34 : 60, top = narrow ? 22 : 44;
+    const right = narrow ? w - 16 : noteBox.x - 36;
+    const contacts = tiles.filter(t => t.kind === 'contact');
+    const cRight = narrow ? noteBox.x - 14 : Math.min(right, left + 620);
+    const cH = flow(contacts, left, cRight, 0);
+    const cTop = h - 64 - cH;
+    contacts.forEach(t => { t.y += cTop; });
+    let y = flow(tiles.filter(t => t.group === 'a'), left, right, top);
+    y = flow(tiles.filter(t => t.group === 'b'), left, right, y + 10);
+    flow(tiles.filter(t => t.group === 'c'), left, right, y + 26, cTop - 18);
+    tiles.forEach(t => { t.r = t.kind === 'contact' ? rand(-2, 2) : rand(-3.5, 3.5); apply(t); });
+  }
+  function clampAll() {
+    w = el.clientWidth; h = el.clientHeight; placeNote();
+    tiles.forEach(t => { t.x = clamp(t.x, 0, Math.max(0, w - t.w)); t.y = clamp(t.y, 0, Math.max(0, h - t.h)); apply(t); });
+  }
+  const overNote = t => { const cx = t.x + t.w / 2, cy = t.y + t.h / 2; return cx > noteBox.x && cx < noteBox.x + noteBox.w && cy > noteBox.y && cy < noteBox.y + noteBox.h + 30; };
+
+  function resetNote() { note.innerHTML = `<p class="note-label">Contact</p><p class="note-hint">Drop a contact magnet here, or tap one.</p>`; }
+  function showOnNote(id) {
+    const c = contactById(id); if (!c) return;
+    note.innerHTML = `<p class="note-label">${esc(c.label)}</p><p class="note-value copy-src">${esc(c.value)}</p><div class="note-actions">${actionsHTML(c, 'btn btn-note')}</div>`;
+    note.classList.remove('flash'); void note.offsetWidth; note.classList.add('flash');
+  }
+
+  function bind(t) {
+    let s = null;
+    t.el.addEventListener('pointerdown', e => {
+      if (e.button > 0 || t.locked) return;
+      e.preventDefault();
+      t.el.setPointerCapture(e.pointerId);
+      s = { px: e.clientX, py: e.clientY, x: t.x, y: t.y, moved: 0 };
+      t.el.classList.add('lift'); t.el.style.zIndex = ++z; touched = true;
+    });
+    t.el.addEventListener('pointermove', e => {
+      if (!s) return;
+      const dx = e.clientX - s.px, dy = e.clientY - s.py;
+      s.moved = Math.max(s.moved, Math.hypot(dx, dy));
+      t.x = clamp(s.x + dx, 0, w - t.w); t.y = clamp(s.y + dy, 0, h - t.h); apply(t);
+      if (t.kind === 'contact') note.classList.toggle('over', overNote(t));
+    });
+    const end = () => {
+      if (!s) return;
+      t.el.classList.remove('lift');
+      if (t.kind === 'contact') { if (s.moved < 6 || overNote(t)) showOnNote(t.id); note.classList.remove('over'); }
+      if (spell && t.spell && s.moved >= 6) trySnap(t);
+      s = null;
+    };
+    t.el.addEventListener('pointerup', end);
+    t.el.addEventListener('pointercancel', end);
+    if (t.kind === 'contact') t.el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showOnNote(t.id); } });
+  }
+
+  function hitsBox(t, x, y, b, pad = 10) { return x < b.x + b.w + pad && x + t.w > b.x - pad && y < b.y + b.h + pad && y + t.h > b.y - pad; }
+  function scatter(avoid) {
+    el.classList.add('scrambling', 'shaking');
+    tiles.forEach(t => {
+      if (t.locked || t.el.hidden) return;
+      let x, y, tries = 0;
+      do { x = rand(26, Math.max(27, w - t.w - 10)); y = rand(10, Math.max(11, h - t.h - 70)); tries++; }
+      while (tries < 20 && (hitsBox(t, x, y, noteBox) || (avoid && hitsBox(t, x, y, avoid, 16))));
+      t.x = x; t.y = y; t.r = rand(-10, 10); apply(t);
+    });
+    touched = true;
+    setTimeout(() => el.classList.remove('scrambling', 'shaking'), 750);
+  }
+
+  function startSpell() {
+    const words = tiles.filter(t => t.spell);
+    const narrow = w < 640;
+    const L = 20, Rr = narrow ? w - 20 : noteBox.x - 30, gap = 10;
+    const rows = []; let row = [], rw = 0;
+    words.forEach(t => { const sw = t.w + 6; if (rw + sw > Rr - L && row.length) { rows.push({ row, rw: rw - gap }); row = []; rw = 0; } row.push(t); rw += sw + gap; });
+    if (row.length) rows.push({ row, rw: rw - gap });
+    const rowH = Math.max(...words.map(t => t.h)) + 6;
+    const zoneTop = Math.round(h * (narrow ? 0.3 : 0.4));
+    slots = [];
+    rows.forEach((r, ri) => {
+      let x = L + Math.max(0, (Rr - L - r.rw) / 2); const y = zoneTop + ri * (rowH + 12);
+      r.row.forEach(t => {
+        const s = { word: t.text, x, y, w: t.w + 6, h: rowH, filled: false, el: document.createElement('div') };
+        s.el.className = 'slot'; Object.assign(s.el.style, { left: x + 'px', top: y + 'px', width: s.w + 'px', height: s.h + 'px' });
+        board.appendChild(s.el); slots.push(s); x += s.w + gap;
+      });
+    });
+    prompt = document.createElement('p'); prompt.className = 'spell-prompt';
+    prompt.innerHTML = `spell: <b>${esc(CONFIG.tagline)}</b>`;
+    prompt.style.left = L + Math.max(0, (Rr - L - (rows[0] ? rows[0].rw : 0)) / 2) + 'px'; prompt.style.top = (zoneTop - 26) + 'px';
+    board.appendChild(prompt);
+    const zone = { x: L, y: zoneTop - 30, w: Rr - L, h: rows.length * (rowH + 12) + 30 };
+    spell = { filled: 0, total: slots.length };
+    scatter(zone);
+  }
+  function trySnap(t) {
+    const tcx = t.x + t.w / 2, tcy = t.y + t.h / 2;
+    let best = null, bd = 48;
+    for (const s of slots) { if (s.filled || s.word !== t.text) continue; const d = Math.hypot(tcx - (s.x + s.w / 2), tcy - (s.y + s.h / 2)); if (d < bd) { bd = d; best = s; } }
+    if (!best) return;
+    t.x = best.x + (best.w - t.w) / 2; t.y = best.y + (best.h - t.h) / 2; t.r = 0; apply(t);
+    t.locked = true; t.el.classList.add('locked'); best.filled = true; best.el.classList.add('filled');
+    spell.filled++; Game.set(spell.filled);
+    if (spell.filled === spell.total) Game.finish(Math.round(Game.elapsed() * 10) / 10);
+  }
+  function stopSpell() {
+    slots.forEach(s => s.el.remove()); slots = [];
+    if (prompt) { prompt.remove(); prompt = null; }
+    tiles.forEach(t => { t.locked = false; t.el.classList.remove('locked'); });
+    spell = null;
+  }
+
+  return {
+    start() { if (!inited) init(); else if (!touched) { measure(); layout(); } else clampAll(); },
+    stop() {},
+    resize() { if (!inited) return; if (!touched) layout(); else clampAll(); },
+    shake: () => scatter(null), shakeLabel: 'Shuffle',
+    hint: 'Drag the magnets · drop a contact on the note (or tap it)',
+    game: {
+      name: 'Spell it', unit: 'to spell the tagline', better: 'lower', duration: 0,
+      intro: 'Spell it: drag the words into the dashed slots, in order, as fast as you can.',
+      format: n => `${Number(n).toFixed(1)}s`,
+      hud: (e, s) => [`${e.toFixed(1)}s`, `${s}/${spell ? spell.total : TAG.length}`],
+      start: startSpell, stop: stopSpell
+    }
+  };
+})();
+
+/* =====================================================================
+   3. FALLING: words with real physics, tower as the game
+   ===================================================================== */
+const Falling = (() => {
+  const el = $('#scene-falling'), layer = $('.fall-layer', el), floorEl = $('.floor-line', el), tower = $('.tower-line', el), towerLabel = $('span', tower);
+  let inited = false, pending = false, running = false, raf = 0, last = 0, acc = 0;
+  let M = null, engine = null, walls = [], items = [], drag = null, w = 0, h = 0, floorY = 0;
+  const local = e => { const r = el.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+
+  function words() {
+    const list = [{ text: CONFIG.name, kind: 'name' }];
+    CONFIG.role.split(/\s+/).map(x => x.replace(/[,·]/g, '')).filter(Boolean).forEach(x => list.push({ text: x, kind: 'word' }));
+    list.push({ text: 'from', kind: 'word' }, { text: CONFIG.city, kind: 'word' });
+    Object.values(CONFIG.skills).flat().slice(0, w < 640 ? 5 : 10).forEach(s => list.push({ text: s, kind: 'skill' }));
+    CONFIG.contacts.forEach(c => list.push({ text: c.label, kind: 'contact', id: c.id, icon: c.icon, value: c.value }));
+    return list.sort(() => Math.random() - 0.5);
+  }
+  function buildWalls() {
+    if (walls.length) M.Composite.remove(engine.world, walls);
+    const T = 300; floorY = h - 56;
+    walls = [
+      M.Bodies.rectangle(w / 2, floorY + T / 2, w + T * 2, T, { isStatic: true, friction: 0.8 }),
+      M.Bodies.rectangle(-T / 2, floorY - h * 2, T, h * 4 + T, { isStatic: true }),
+      M.Bodies.rectangle(w + T / 2, floorY - h * 2, T, h * 4 + T, { isStatic: true }),
+      M.Bodies.rectangle(w / 2, floorY - h * 4 - T / 2, w + T * 2, T, { isStatic: true })
+    ];
+    M.Composite.add(engine.world, walls);
+    floorEl.style.top = floorY + 'px';
+  }
+  function init() {
+    M = window.Matter;
+    if (!M) { layer.innerHTML = '<p class="scene-msg">The physics engine did not load, so this toy is resting. Reload the page to try again.</p>'; inited = true; return; }
+    w = el.clientWidth; h = el.clientHeight;
+    engine = M.Engine.create(); engine.gravity.y = 1;
+    buildWalls();
+    let x = 24, y = 20, rowH = 0;
+    words().forEach(d => {
+      const isBtn = d.kind === 'contact';
+      const e = document.createElement(isBtn ? 'button' : 'div');
+      e.className = 'chip chip-' + d.kind;
+      if (isBtn) { e.type = 'button'; e.innerHTML = ic(d.icon) + esc(d.text); e.setAttribute('aria-label', `${d.text}: ${d.value}`); }
+      else { e.textContent = d.text; e.setAttribute('aria-hidden', 'true'); }
+      layer.appendChild(e);
+      const bw = e.offsetWidth, bh = e.offsetHeight;
+      if (x + bw > w - 24) { x = 24; y += rowH + 16; rowH = 0; }
+      const body = M.Bodies.rectangle(x + bw / 2, y + bh / 2, bw, bh, {
+        chamfer: { radius: Math.max(2, Math.min(bh / 2 - 1, 18)) }, restitution: 0.25, friction: 0.5, frictionAir: 0.012, density: 0.0015
+      });
+      M.Body.setAngle(body, rand(-0.25, 0.25));
+      const it = { ...d, el: e, body, w: bw, h: bh };
+      items.push(it);
+      if (isBtn) e.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openPop(it.id, body.position.x, body.position.y); } });
+      x += bw + rand(14, 34); rowH = Math.max(rowH, bh);
+    });
+    M.Composite.add(engine.world, items.map(i => i.body));
+    layer.addEventListener('pointerdown', onDown);
+    layer.addEventListener('pointermove', onMove);
+    layer.addEventListener('pointerup', onUp);
+    layer.addEventListener('pointercancel', onUp);
+    inited = true;
+  }
+  function onDown(e) {
+    if (e.button > 0 || !engine || Game.locked) return;
+    const pt = local(e);
+    const hit = M.Query.point(items.map(i => i.body), pt)[0];
+    if (!hit) return;
+    layer.setPointerCapture(e.pointerId);
+    const c = M.Constraint.create({ pointA: { x: pt.x, y: pt.y }, bodyB: hit, pointB: { x: pt.x - hit.position.x, y: pt.y - hit.position.y }, stiffness: 0.12, damping: 0.08, length: 0 });
+    M.Composite.add(engine.world, c);
+    drag = { it: items.find(i => i.body === hit), c, x0: pt.x, y0: pt.y, t0: performance.now(), moved: 0 };
+    layer.classList.add('grabbing');
+  }
+  function onMove(e) {
+    if (!drag) return;
+    const pt = local(e);
+    drag.c.pointA = { x: pt.x, y: pt.y };
+    drag.moved = Math.max(drag.moved, Math.hypot(pt.x - drag.x0, pt.y - drag.y0));
+  }
+  function release() { if (!drag) return; M.Composite.remove(engine.world, drag.c); drag = null; layer.classList.remove('grabbing'); }
+  function onUp() {
+    if (!drag) return;
+    const d = drag; release();
+    if (d.moved < 6 && performance.now() - d.t0 < 450 && d.it.kind === 'contact') openPop(d.it.id, d.it.body.position.x, d.it.body.position.y);
+  }
+  function towerHeight() {
+    let top = floorY;
+    for (const it of items) { if (drag && drag.it === it) continue; if (it.body.speed > 0.6) continue; top = Math.min(top, it.body.bounds.min.y); }
+    return Math.max(0, floorY - top);
+  }
+  function showTower() { const hp = towerHeight(); tower.style.top = (floorY - hp) + 'px'; const cm = Math.round(hp / 10); towerLabel.textContent = `${cm} cm`; return cm; }
+  function sync() { for (const it of items) { const p = it.body.position; it.el.style.transform = `translate(${p.x - it.w / 2}px,${p.y - it.h / 2}px) rotate(${it.body.angle}rad)`; } }
+  function loop(now) {
+    if (!running) return;
+    acc += Math.min(100, now - last); last = now;
+    let n = 0; while (acc >= 1000 / 60 && n < 4) { M.Engine.update(engine, 1000 / 60); acc -= 1000 / 60; n++; }
+    if (n === 4) acc = 0;
+    sync();
+    if (Game.isActive('falling') && !Game.locked) Game.set(showTower());
+    raf = requestAnimationFrame(loop);
+  }
+  function run() {
+    if (!engine) return;
+    running = true; last = performance.now(); acc = 0;
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+  }
+  function resize() {
+    if (!engine) return;
+    w = el.clientWidth; h = el.clientHeight; buildWalls();
+    items.forEach(it => { const p = it.body.position; const nx = clamp(p.x, it.w / 2, w - it.w / 2), ny = Math.min(p.y, floorY - it.h / 2); if (nx !== p.x || ny !== p.y) M.Body.setPosition(it.body, { x: nx, y: ny }); });
+  }
+  return {
+    start() {
+      if (inited) { resize(); run(); return; }
+      if (pending) return; pending = true;
+      fontsReady.then(() => { pending = false; if (currentMode !== 'falling' || inited) return; init(); run(); });
+    },
+    stop() { running = false; cancelAnimationFrame(raf); if (engine) release(); },
+    resize,
+    shake() { if (!engine) return; items.forEach(i => { M.Body.setVelocity(i.body, { x: rand(-9, 9), y: rand(-17, -8) }); M.Body.setAngularVelocity(i.body, rand(-0.25, 0.25)); }); },
+    shakeLabel: 'Shake',
+    hint: 'Grab a word and throw it · tap a contact to open it',
+    game: {
+      name: 'Tower', unit: 'tallest tower in 20 seconds', better: 'higher', duration: 20,
+      intro: 'Tower: stack the words as high as you can in 20 seconds. It counts once it stands still.',
+      format: n => `${n} cm`,
+      hud: (e, s) => [`${Math.max(0, Math.ceil(20 - e))}s`, `${s} cm`],
+      start() { tower.hidden = !engine; },
+      onTimeUp() { if (engine) release(); setTimeout(() => { if (Game.isActive('falling')) Game.finish(engine ? showTower() : 0); }, 1300); },
+      stop() { tower.hidden = true; }
+    }
+  };
+})();
+
+/* =====================================================================
+   4. PLANE: throw a paper plane at the contact card
+   ===================================================================== */
+const Plane = (() => {
+  const el = $('#scene-plane'), cv = $('canvas', el), ctx = cv.getContext('2d');
+  const target = $('.target', el), bull = $('.bullseye', el), callout = $('.callout', el);
+  let inited = false, running = false, raf = 0, last = 0, t = 0;
+  let w = 0, h = 0, dpr = 1, floorY = 0, pad = { x: 0, y: 0 }, tr = { x: 0, y: 0, w: 0, h: 0, cx: 0, cy: 0 };
+  const P = { x: 0, y: 0, vx: 0, vy: 0, a: -0.35, mode: 'ready' };
+  let trail = [], conf = [], aim = null, resetAt = 0, throws = 0, calloutT = 0, labelFont = '11px monospace';
+  const local = e => { const r = el.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+
+  function init() {
+    $('.ph-name', el).textContent = CONFIG.name;
+    $('.ph-role', el).textContent = `${CONFIG.role} · ${CONFIG.city}`;
+    $('.ph-tag', el).textContent = CONFIG.headline || (CONFIG.tagline.charAt(0).toUpperCase() + CONFIG.tagline.slice(1) + '.');
+    const row = id => { const c = contactById(id); return c ? `<div class="t-row" data-value-scope>${ic(c.icon)}<span class="t-v copy-src">${esc(c.value)}</span><button type="button" class="icon-btn" data-copy="${c.id}" aria-label="Copy ${esc(c.label.toLowerCase())}">${ic('copy')}</button></div>` : ''; };
+    const links = CONFIG.contacts.filter(c => !c.copy && c.href).map(c => `<a href="${esc(c.href)}"${isExternal(c.href) ? ' target="_blank" rel="noopener"' : ''} aria-label="${esc(c.label)}" title="${esc(c.label)}">${ic(c.icon)}</a>`).join('');
+    target.innerHTML = `<div class="target-head"><span>Land here</span><i>100 pts centre</i></div>${row('email')}${row('phone')}<div class="t-links">${links}</div>`;
+    el.addEventListener('pointerdown', onDown);
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+    el.addEventListener('pointercancel', () => { if (aim) { aim = null; resetPlane(); } });
+    labelFont = '11px ' + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+    fontsReady.then(() => { if (currentMode === 'plane') resize(); });
+    inited = true;
+  }
+  function resetPlane() { P.mode = 'ready'; P.x = pad.x; P.y = pad.y; P.vx = P.vy = 0; P.a = -0.35; trail = []; target.classList.remove('landed'); }
+  function onDown(e) {
+    if (e.button > 0 || e.target.closest('.target') || P.mode !== 'ready' || Game.locked) return;
+    el.setPointerCapture(e.pointerId);
+    const pt = local(e); aim = { x0: pt.x, y0: pt.y, dx: 0, dy: 0 }; P.mode = 'aim';
+  }
+  function onMove(e) {
+    if (!aim) return;
+    const pt = local(e); let dx = pt.x - aim.x0, dy = pt.y - aim.y0; const d = Math.hypot(dx, dy), max = 130;
+    if (d > max) { dx *= max / d; dy *= max / d; }
+    aim.dx = dx; aim.dy = dy;
+    // show the pull as a short slingshot stretch, kept above the floor and inside the stage
+    P.x = clamp(pad.x + dx * 0.45, 16, w - 16); P.y = clamp(pad.y + dy * 0.45, 16, floorY - 18);
+    if (d > 4) P.a = Math.atan2(-dy, -dx);
+  }
+  function launchVel(dx, dy) { const k = Math.sqrt(w * h) * 1.2 / 130; return { vx: -dx * k, vy: -dy * k }; }
+  function onUp() {
+    if (!aim) return;
+    const { dx, dy } = aim; aim = null;
+    if (Math.hypot(dx, dy) < 14) { resetPlane(); say('Pull back further, then let go', pad.x + 40, pad.y - 30); return; }
+    const v = launchVel(dx, dy); P.vx = v.vx; P.vy = v.vy; P.mode = 'fly'; trail = [];
+  }
+  function physics(o, dt) {
+    const g = 980 * (h / 700);
+    const sp = Math.hypot(o.vx, o.vy), ang = Math.atan2(o.vy, o.vx);
+    const lift = 0.55 * g * Math.cos(ang) ** 2 * Math.min(1, sp / 500);
+    o.vy += (g - lift) * dt;
+    const k = Math.exp(-0.25 * dt); o.vx *= k; o.vy *= k;
+    o.x += o.vx * dt; o.y += o.vy * dt;
+  }
+  function say(text, x, y) {
+    callout.textContent = text;
+    callout.style.left = clamp(x, 90, w - 90) + 'px'; callout.style.top = clamp(y, 40, h) + 'px';
+    callout.classList.add('show'); clearTimeout(calloutT); calloutT = setTimeout(() => callout.classList.remove('show'), 1400);
+  }
+  function confetti(x, y, n) {
+    const cols = [COL.sun, COL.fg, COL.muted];
+    for (let i = 0; i < n; i++) { const a = rand(-Math.PI, 0), s = rand(150, 620); conf.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, r: rand(0, 6.28), vr: rand(-12, 12), c: cols[i % 3], age: 0, life: rand(0.9, 1.7), s: rand(4, 8) }); }
+  }
+  function land(where, nx, ny) {
+    P.mode = 'landed'; P.vx = P.vy = 0; resetAt = performance.now() + 1300;
+    let pts = 0;
+    if (where === 'target') {
+      const d = Math.hypot(nx - tr.cx, ny - tr.cy), dmax = Math.hypot(tr.w, tr.h) / 2;
+      pts = d < 26 ? 100 : Math.max(30, Math.round(100 - 70 * d / dmax));
+      target.classList.add('landed'); confetti(P.x, P.y, REDUCED ? 20 : (pts === 100 ? 140 : 70));
+      say(pts === 100 ? 'Bullseye! +100' : `Nice landing +${pts}`, P.x, P.y - 24);
+    } else say(where === 'out' ? 'Out of bounds' : 'Missed. Try again', clamp(P.x, 0, w), Math.min(P.y, floorY) - 24);
+    if (Game.isActive('plane')) {
+      throws++; Game.add(pts);
+      if (throws >= 5) setTimeout(() => { if (Game.isActive('plane')) Game.finish(Game.score()); }, 1200);
+    }
+  }
+  function step(dt) {
+    t += dt;
+    if (P.mode === 'ready') { P.y = pad.y + (REDUCED ? 0 : Math.sin(t * 2.2) * 3); P.x = pad.x; }
+    if (P.mode === 'fly') {
+      physics(P, dt);
+      if (P.y < 8) { P.y = 8; P.vy = Math.abs(P.vy) * 0.3; }
+      const ta = Math.atan2(P.vy, P.vx); let da = ta - P.a; da = Math.atan2(Math.sin(da), Math.cos(da)); P.a += da * Math.min(1, dt * 10);
+      trail.push(P.x, P.y); if (trail.length > 120) trail.splice(0, 2);
+      const nx = P.x + Math.cos(P.a) * 18, ny = P.y + Math.sin(P.a) * 18;
+      if (nx > tr.x && nx < tr.x + tr.w && ny > tr.y && ny < tr.y + tr.h) land('target', nx, ny);
+      else if (P.y >= floorY - 6 && P.vy > 0) { P.y = floorY - 6; P.a = 0.1; land('floor'); }
+      else if ((P.x < -40 && P.vx < 0) || (P.x > w + 40 && P.vx > 0)) land('out');
+    }
+    if (P.mode === 'landed' && performance.now() > resetAt) {
+      if (Game.isActive('plane') && throws >= 5) { /* wait for the end card */ } else resetPlane();
+    }
+    for (const c of conf) { c.age += dt; c.vy += 900 * dt; c.vx *= 0.985; c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt; }
+    conf = conf.filter(c => c.age < c.life && c.y < h + 20);
+  }
+  function drawPlane(x, y, a) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(a);
+    const L = 20;
+    ctx.fillStyle = COL.fg; ctx.beginPath(); ctx.moveTo(L, 0); ctx.lineTo(-L, -L * 0.72); ctx.lineTo(-L * 0.5, 0); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = COL.muted; ctx.beginPath(); ctx.moveTo(L, 0); ctx.lineTo(-L * 0.5, 0); ctx.lineTo(-L * 0.85, L * 0.46); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function draw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, floorY + 0.5); ctx.lineTo(w, floorY + 0.5); ctx.stroke();
+    ctx.setLineDash([3, 5]); ctx.beginPath(); ctx.arc(pad.x, pad.y, 26, 0, 6.29); ctx.stroke(); ctx.setLineDash([]);
+    if (trail.length > 2) {
+      ctx.strokeStyle = COL.muted; ctx.globalAlpha = 0.5; ctx.setLineDash([2, 7]); ctx.beginPath(); ctx.moveTo(trail[0], trail[1]);
+      for (let i = 2; i < trail.length; i += 2) ctx.lineTo(trail[i], trail[i + 1]);
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    if (P.mode === 'aim' && aim && Math.hypot(aim.dx, aim.dy) > 4) {
+      ctx.strokeStyle = COL.muted; ctx.beginPath(); ctx.moveTo(pad.x, pad.y); ctx.lineTo(P.x, P.y); ctx.stroke();
+      const v = launchVel(aim.dx, aim.dy), o = { x: P.x, y: P.y, vx: v.vx, vy: v.vy };
+      ctx.fillStyle = COL.sun;
+      for (let i = 0; i < 16; i++) { for (let j = 0; j < 2; j++) physics(o, 1 / 60); ctx.globalAlpha = 1 - i / 16; ctx.beginPath(); ctx.arc(o.x, o.y, 2.2, 0, 6.29); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+    if (P.mode === 'ready') {
+      ctx.fillStyle = COL.muted; ctx.font = labelFont;
+      ctx.textAlign = 'center'; ctx.fillText('pull back', pad.x, pad.y + 44);
+    }
+    drawPlane(P.x, P.y, P.a);
+    for (const c of conf) { ctx.save(); ctx.globalAlpha = 1 - c.age / c.life; ctx.translate(c.x, c.y); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.fillRect(-c.s / 2, -c.s / 4, c.s, c.s / 2); ctx.restore(); }
+  }
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(0.033, (now - last) / 1000); last = now;
+    step(dt); draw(); raf = requestAnimationFrame(loop);
+  }
+  function resize() {
+    if (!inited) return;
+    w = el.clientWidth; h = el.clientHeight; dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    floorY = h - 56; pad = { x: w < 640 ? 60 : 96, y: floorY - 64 };
+    const sr = el.getBoundingClientRect(), r = target.getBoundingClientRect();
+    tr = { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height }; tr.cx = tr.x + tr.w / 2; tr.cy = tr.y + tr.h / 2;
+    const bs = Math.max(tr.w, tr.h) * 1.9;
+    Object.assign(bull.style, { left: (tr.cx - bs / 2) + 'px', top: (tr.cy - bs / 2) + 'px', width: bs + 'px', height: bs + 'px' });
+    if (P.mode === 'ready' || P.mode === 'aim') { aim = null; resetPlane(); }
+  }
+  return {
+    start() { if (!inited) init(); resize(); running = true; last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); },
+    stop() { running = false; cancelAnimationFrame(raf); aim = null; },
+    resize, shake: null, shakeLabel: '',
+    hint: 'Pull back anywhere and let go to throw · land on the card',
+    game: {
+      name: '5 throws', unit: 'points from 5 throws', better: 'higher', duration: 0,
+      intro: '5 throws: land the plane on the card. The closer to the centre, the more points.',
+      format: n => String(n),
+      hud: (e, s) => [`throw ${Math.min(throws + 1, 5)}/5`, `${s} pts`],
+      start() { throws = 0; conf = []; resetPlane(); }
+    }
+  };
+})();
+
+/* =====================================================================
+   TOY SETUP: one toy at a time (change CONFIG.toy to switch)
+   ===================================================================== */
+const MODES = { orbit: Orbit, magnets: Magnets, falling: Falling, plane: Plane };
+const shakeBtn = $('#shake'), hintEl = $('#hint');
+const sceneOf = m => $('#scene-' + m);
+function setMode(name) {
+  if (!MODES[name]) name = 'orbit';
+  if (currentMode === name) return;
+  Game.quit(); closePop(); $('#endcard').hidden = true;
+  if (currentMode) { MODES[currentMode].stop(); sceneOf(currentMode).hidden = true; }
+  currentMode = name;
+  sceneOf(name).hidden = false;
+  const m = MODES[name];
+  hintEl.textContent = m.hint;
+  shakeBtn.hidden = !m.shake; shakeBtn.textContent = m.shakeLabel || '';
+  Game.label();
+  m.start();
+}
+shakeBtn.addEventListener('click', () => { const m = MODES[currentMode]; if (m.shake) m.shake(); });
+$('#to-top').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' }); });
+
+new ResizeObserver(() => {
+  SW = stage.clientWidth; SH = stage.clientHeight;
+  if (currentMode) MODES[currentMode].resize();
+}).observe(stage);
+
+/* =====================================================================
+   PORTFOLIO SHEET
+   ===================================================================== */
+function renderSheet() {
+  const P = sheetParts(CONFIG, { appNote: !IS_SITE });
+  $('#brand-name').textContent = CONFIG.name;
+  $('#brand-role').textContent = CONFIG.role;
+  if (!IS_SITE) document.title = `${CONFIG.name} · Portfolio`;
+  $('#strip').innerHTML = P.strip;
+  $('#bio').textContent = CONFIG.bio;
+  $('#facts').innerHTML = P.facts;
+  $('#highlights').hidden = !P.highlights; $('#highlights').innerHTML = P.highlights;
+  $('#work-list').innerHTML = P.work;
+  $('#skills-list').innerHTML = P.skills;
+  $('#exp-list').innerHTML = P.exp;
+  $('#education').hidden = !P.edu; $('#edu-list').innerHTML = P.edu;
+  $('#faq').hidden = !P.faq; $('#faq-list').innerHTML = P.faq;
+  $('#hello').innerHTML = P.hello;
+  $('#foot-left').innerHTML = P.foot;
+  const tick = () => {
+    let s = '';
+    try { s = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: CONFIG.timezone }).format(new Date()); } catch (e) { s = '–'; }
+    $('#local-time').textContent = `${s} (${CONFIG.timezone})`;
+  };
+  tick(); setInterval(tick, 20000);
+}
+
+renderSheet();
+setMode(ACTIVE_TOY);
+})();
+</script>

@@ -1,0 +1,9 @@
+# build output (Vercel runs `node build.js` itself)
+dist/
+
+# local test and tooling files
+.playwright-mcp/
+node_modules/
+.vercel/
+.DS_Store
+Thumbs.db
